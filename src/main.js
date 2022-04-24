@@ -129,11 +129,11 @@ const ring3 = customRing(0.15, "white");
 ring3.scale.set(1.3, 1.3);
 scene.add(ring3);
 
-const hourHand = customHandle(0.4, 0.135, 0.07, "black");
+const hourHand = customHandle(0.4, 0.135, 0.07, "white");
 scene.add(hourHand);
-const minuteHand = customHandle(0.8, 0.135, 0.07, "red");
+const minuteHand = customHandle(0.8, 0.135, 0.07, "gray");
 scene.add(minuteHand);
-const secondsHand = customHandle(1, 0.135, 0.07, "blue");
+const secondsHand = customHandle(1, 0.135, 0.07, "black");
 scene.add(secondsHand);
 // // Materials
 
@@ -234,9 +234,12 @@ const tick = () => {
 	hourHand.position.set(Math.sin(hourAngle), Math.cos(hourAngle));
 
 	let minuteAngle = (date.getMinutes() / 60) * Math.PI * 2;
+
 	minuteHand.rotation.z = -minuteAngle;
 	minuteHand.position.set(Math.sin(minuteAngle), Math.cos(minuteAngle));
+
 	let secondsAngle = (date.getSeconds() / 60) * Math.PI * 2;
+
 	secondsHand.rotation.z = -secondsAngle;
 	secondsHand.position.set(Math.sin(secondsAngle), Math.cos(secondsAngle));
 	//Update controls
