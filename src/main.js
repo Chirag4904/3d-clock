@@ -22,11 +22,53 @@ let mousePos = new THREE.Vector2(0, 0);
 window.addEventListener("mousemove", (e) => {
 	let x = e.clientX - innerWidth * 0.5;
 	let y = e.clientY - innerHeight * 0.5;
-	console.log("x:" + x + "y:" + y);
+	mousePos.x = x * 0.001;
+	mousePos.y = y * 0.001;
 });
 
 // Objects
 // const geometry = new THREE.TorusGeometry(0.7, 0.2, 16, 100);
+
+function customHandle(height, width, depth, color) {
+	const box = new THREE.Mesh(
+		new THREE.BoxBufferGeometry(width, height, depth),
+		new THREE.MeshStandardMaterial({
+			roughness: 0,
+			metalness: 1,
+			side: DoubleSide,
+			color,
+		})
+	);
+	box.position.set(0, 0, 0);
+
+	const topCap = new THREE.Mesh(
+		new THREE.CylinderBufferGeometry(width * 0.5, width * 0.5, depth),
+		new THREE.MeshStandardMaterial({
+			roughness: 0,
+			metalness: 1,
+			side: DoubleSide,
+			color,
+		})
+	);
+	topCap.rotation.x = Math.PI * 0.5;
+	topCap.position.set(0, height * 0.5, 0);
+
+	const bottomCap = new THREE.Mesh(
+		new THREE.CylinderBufferGeometry(width * 0.5, width * 0.5, depth),
+		new THREE.MeshStandardMaterial({
+			roughness: 0,
+			metalness: 1,
+			side: DoubleSide,
+			color,
+		})
+	);
+	bottomCap.rotation.x = Math.PI * 0.5;
+	bottomCap.position.set(0, -height * 0.5, 0);
+
+	let group = new THREE.Group();
+	group.add(box, bottomCap, topCap);
+	return group;
+}
 
 function customRing(thickness, color) {
 	const ring = new THREE.Mesh(
@@ -86,6 +128,13 @@ scene.add(ring2);
 const ring3 = customRing(0.15, "white");
 ring3.scale.set(1.3, 1.3);
 scene.add(ring3);
+
+const hourHand = customHandle(0.4, 0.135, 0.07, "black");
+scene.add(hourHand);
+const minuteHand = customHandle(0.8, 0.135, 0.07, "red");
+scene.add(minuteHand);
+const secondsHand = customHandle(1, 0.135, 0.07, "blue");
+scene.add(secondsHand);
 // // Materials
 
 // const material = new THREE.MeshStandardMaterial({
@@ -167,8 +216,29 @@ const tick = () => {
 	const elapsedTime = clock.getElapsedTime();
 
 	// Update objects
-	// sphere.rotation.y = 0.5 * elapsedTime;
+	ring1.rotation.x = ring1.rotation.x * 0.95 + mousePos.y * 0.2 * 0.5;
+	ring1.rotation.y = ring1.rotation.y * 0.95 + mousePos.x * 0.2 * 0.5;
 
+	ring2.rotation.x = ring2.rotation.x * 0.8 + mousePos.y * 0.38 * 0.2;
+	ring2.rotation.y = ring2.rotation.y * 0.8 + mousePos.x * 0.38 * 0.2;
+
+	ring3.rotation.x = -(ring3.rotation.x * 0.7 + mousePos.y * 0.25 * 0.3);
+	ring3.rotation.y = -(ring3.rotation.y * 0.7 + mousePos.x * 0.25 * 0.3);
+
+	//Time logic
+	let date = new Date();
+
+	let hourAngle = (date.getHours() / 12) * Math.PI * 2;
+
+	hourHand.rotation.z = -hourAngle;
+	hourHand.position.set(Math.sin(hourAngle), Math.cos(hourAngle));
+
+	let minuteAngle = (date.getMinutes() / 60) * Math.PI * 2;
+	minuteHand.rotation.z = -minuteAngle;
+	minuteHand.position.set(Math.sin(minuteAngle), Math.cos(minuteAngle));
+	let secondsAngle = (date.getSeconds() / 60) * Math.PI * 2;
+	secondsHand.rotation.z = -secondsAngle;
+	secondsHand.position.set(Math.sin(secondsAngle), Math.cos(secondsAngle));
 	//Update controls
 	controls.update();
 	// Render
