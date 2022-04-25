@@ -8,7 +8,7 @@ import { DoubleSide } from "three";
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
 
-new RGBELoader().load("../assets/cannon_1k_blurred.hdr", function (texture) {
+new RGBELoader().load("./assets/cannon_1k_blurred.hdr", function (texture) {
 	texture.mapping = THREE.EquirectangularReflectionMapping;
 	scene.background = texture;
 	scene.environment = texture;
