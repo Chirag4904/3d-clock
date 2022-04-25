@@ -8,15 +8,15 @@ import { DoubleSide } from "three";
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
 
-new RGBELoader().load("./assets/cannon_1k_blurred.hdr", function (texture) {
-	texture.mapping = THREE.EquirectangularReflectionMapping;
-	scene.background = texture;
-	scene.environment = texture;
-});
+// new RGBELoader().load("./assets/cannon_1k_blurred.hdr", function (texture) {
+// 	texture.mapping = THREE.EquirectangularReflectionMapping;
+// 	scene.background = texture;
+// 	scene.environment = texture;
+// });
 
 // Scene
 const scene = new THREE.Scene();
-
+scene.background = new THREE.Color("gray");
 //Mouse position
 let mousePos = new THREE.Vector2(0, 0);
 window.addEventListener("mousemove", (e) => {
@@ -74,7 +74,7 @@ function customRing(thickness, color) {
 	const ring = new THREE.Mesh(
 		new THREE.RingBufferGeometry(2, 2 + thickness, 70),
 		new THREE.MeshStandardMaterial({
-			roughness: 0,
+			roughness: 0.5,
 			metalness: 1,
 			side: DoubleSide,
 			color,
@@ -117,7 +117,7 @@ function customRing(thickness, color) {
 	return group;
 }
 
-const ring1 = customRing(0.65, "darkgrey");
+const ring1 = customRing(0.65, "darkgray");
 ring1.scale.set(0.75, 0.75);
 scene.add(ring1);
 
@@ -153,6 +153,9 @@ scene.add(secondsHand);
 // pointLight.position.y = 3;
 // pointLight.position.z = 4;
 // scene.add(pointLight);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
+directionalLight.position.set(0, 3, 10);
+scene.add(directionalLight);
 
 /**
  * Sizes
